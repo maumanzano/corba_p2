@@ -6,8 +6,10 @@
 package servidor;
 
 import sop_corba.SolucionPOA;
+import sop_corba.arquitectura;
 import sop_corba.arquitecturaHolder;
 import sop_corba.fichero;
+
 
 /**
  *
@@ -17,12 +19,22 @@ public class SolucionImpl extends SolucionPOA{
 
     @Override
     public void establecerArquitectura(arquitecturaHolder objArquitectura) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        String nSistemOper = System.getProperty("os.name");
+        String aSistemOper = System.getProperty("os.arch");
+        String vSistemOper = System.getProperty("os.version");
+        String sSistemOper = System.getProperty("path.separator");
+        
+        arquitectura obj;
+        obj = new arquitectura(nSistemOper,aSistemOper,vSistemOper,sSistemOper);
+        objArquitectura.value=obj;
+        
+        
     }
 
     @Override
     public fichero[] listarArchivosDuplicados(String rutaDirectorio) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
     
 }
