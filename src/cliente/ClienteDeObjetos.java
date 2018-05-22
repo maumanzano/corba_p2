@@ -9,7 +9,8 @@ import sop_corba.*;
 public class ClienteDeObjetos
 {
   //*** Atributo estático ***
-  static xxxxxx ref;
+  static SolucionOperations ref;
+  static arquitecturaHolder objArquitectura;
 
   public static void main(String args[])
     {
@@ -23,13 +24,12 @@ public class ClienteDeObjetos
         NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
  
         // *** Resuelve la referencia del objeto en el N_S ***
-        String name = "xxx";
-        ref = xxxxHelper.narrow(ncRef.resolve_str(name));
+        String name = "objSolucion";
+        ref = SolucionHelper.narrow(ncRef.resolve_str(name));
 
         System.out.println("Obtenido el manejador sobre el servidor de objetos: " +ref);
         
-        ref.xxxxxxMetodoRemoto();
-        
+        menu();
 
 	} catch (Exception e) {
           System.out.println("ERROR : " + e) ;
@@ -37,5 +37,51 @@ public class ClienteDeObjetos
 	  }
     }
 
+    public static void menu(){
+        int opc=0;
+        
+        do{
+            System.out.println("======== Menu ========");
+            System.out.println("1. Consultar arquitectura,version y sistema operativo");			
+            System.out.println("2. Localizar archivos duplicados");
+            System.out.println("3. Salir");
+            System.out.println("=========== ==========");
+            
+            opc = UtilidadesConsola.leerEntero();
+            
+            switch(opc){
+                case 1:
+                    opcion1();
+                    break;
+                case 2:
+                    opcion2();
+                    break;
+                case 3:
+                    System.out.println("Saliendo del juego...");
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Opción incorrecta");
+                    break;
+            }
+        }while(opc!=3);
+        
+    }
+    
+    public static void opcion1(){
+        objArquitectura = new arquitecturaHolder();
+        ref.establecerArquitectura(objArquitectura);
+        System.out.println("Informacion de maquina:");
+        System.out.println(" Sistema operativo: "+objArquitectura.value.nombreSistemaOperativo);
+        System.out.println(" Arquitectura: "+objArquitectura.value.nombreSistemaOperativo);
+        System.out.println(" Version: "+objArquitectura.value.nombreSistemaOperativo);
+        System.out.println(" Separador: "+objArquitectura.value.nombreSistemaOperativo);
+    }
+    
+    public static void opcion2(){
+        String ruta="";
+        ruta=UtilidadesConsola.leerCadena();
+        ref.listarArchivosDuplicados(ruta);
+    }
 }
 
