@@ -21,12 +21,12 @@ public class ServidorDeObjetos {
       rootpoa.the_POAManager().activate();
 
       //*** crea una instancia del servant y lo registra con el ORB ***
-      xxxImpl convref = new xxxxImpl();
+      SolucionImpl convref = new SolucionImpl();
        
       //*** obtiene la referencia del objeto desde el servant ***
       org.omg.CORBA.Object obj = 
       rootpoa.servant_to_reference(convref);
-      xxxx href = xxxxHelper.narrow(obj);
+      Solucion href = SolucionHelper.narrow(obj);
 	  
       // obtiene la base del contexto de nombrado
       org.omg.CORBA.Object objref =
@@ -36,7 +36,7 @@ public class ServidorDeObjetos {
       NamingContextExt ncref = NamingContextExtHelper.narrow(objref);
 
       // *** Realiza el binding de la referencia de objeto en el N_S ***
-      String name = "xxxx";
+      String name = "objSolucion";
       NameComponent path[] = ncref.to_name( name );
       ncref.rebind(path, href);
 
