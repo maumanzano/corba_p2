@@ -5,6 +5,8 @@
  */
 package servidor;
 
+import java.io.File;
+import java.util.ArrayList;
 import sop_corba.SolucionPOA;
 import sop_corba.arquitectura;
 import sop_corba.arquitecturaHolder;
@@ -34,7 +36,63 @@ public class SolucionImpl extends SolucionPOA{
 
     @Override
     public fichero[] listarArchivosDuplicados(String rutaDirectorio) {
-        return null;
+        
+        File f=new File(rutaDirectorio);
+        fichero[] ficheros;
+        ArrayList<fichero> ficherosTmp=new ArrayList<fichero>();
+        
+        ficheros = null;
+        if(f.exists()){//Si el directorio existe
+            File[] files = f.listFiles();
+            if(files.length==0){
+                fichero fichero=new fichero("$",false);
+                ficheros[0]=fichero;
+            }
+            for (int i = 0; i < files.length; i++) {
+                fichero fTmp = listarArchivosDuplicados(files[i],files);
+                if(fTmp!=null){
+                    ficherosTmp.add(fTmp);
+                }
+            }
+        }else{ //no existe
+            return null;
+        }
+        
+        for (int i = 0; i < ficherosTmp.size(); i++) {
+            ficheros[i]=ficherosTmp.get(i);
+        }
+        return ficheros;
     }
     
+    private fichero listarArchivosDuplicados(File file,File[] files){
+        fichero fichero = null;
+        if(file.isFile()){
+            if(validarNombre(files,file)){
+                fichero=new fichero(file.getName(),false);
+            }
+            
+        }else{
+            File[] listFiles = file.listFiles();
+            for (int i = 0; i < listFiles.length; i++) {
+                fichero=listarArchivosDuplicados(listFiles[i],listFiles);
+            }
+        }
+        
+        return fichero;
+    }
+    
+    private boolean validarNombre(File[] files, File file){
+        int cont=0;
+        boolean flag=false;
+        for (int i = 0; i < files.length; i++) {
+            if(file.getName().equals(files[i].getName())){
+                cont ++;
+            }
+        }
+        if(cont>1){
+            flag=true;
+        }
+        
+        return flag;
+    }
 }
