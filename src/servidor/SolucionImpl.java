@@ -34,7 +34,7 @@ public class SolucionImpl extends SolucionPOA{
 
     @Override
     public fichero[] listarArchivosDuplicados(String rutaDirectorio) {
-        
+        return null;
     }
     
 }
