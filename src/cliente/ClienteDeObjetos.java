@@ -73,15 +73,24 @@ public class ClienteDeObjetos
         ref.establecerArquitectura(objArquitectura);
         System.out.println("Informacion de maquina:");
         System.out.println(" Sistema operativo: "+objArquitectura.value.nombreSistemaOperativo);
-        System.out.println(" Arquitectura: "+objArquitectura.value.nombreSistemaOperativo);
-        System.out.println(" Version: "+objArquitectura.value.nombreSistemaOperativo);
-        System.out.println(" Separador: "+objArquitectura.value.nombreSistemaOperativo);
+        System.out.println(" Arquitectura: "+objArquitectura.value.arquitectura);
+        System.out.println(" Version: "+objArquitectura.value.version);
+        System.out.println(" Separador: "+objArquitectura.value.separador);
     }
     
     public static void opcion2(){
         String ruta="";
         ruta=UtilidadesConsola.leerCadena();
-        ref.listarArchivosDuplicados(ruta);
+        fichero[] archivosDuplicados = ref.listarArchivosDuplicados(ruta);
+        if(archivosDuplicados!=null){
+            System.out.print("< ");
+            for (int i = 0; i < archivosDuplicados.length; i++) {
+                System.out.print(" "+archivosDuplicados[i].nombre+" ");
+            }
+            System.out.println(">");
+        }else{
+            System.out.println("No existe el directorio");
+        }
     }
 }
 

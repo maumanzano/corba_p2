@@ -22,10 +22,12 @@ public class SolucionImpl extends SolucionPOA{
     @Override
     public void establecerArquitectura(arquitecturaHolder objArquitectura) {
         
+        System.out.println(" Usuarios solicita informacion de arquitectura");
+        
         String nSistemOper = System.getProperty("os.name");
         String aSistemOper = System.getProperty("os.arch");
         String vSistemOper = System.getProperty("os.version");
-        String sSistemOper = System.getProperty("path.separator");
+        String sSistemOper = System.getProperty("file.separator");
         
         arquitectura obj;
         obj = new arquitectura(nSistemOper,aSistemOper,vSistemOper,sSistemOper);
@@ -37,55 +39,65 @@ public class SolucionImpl extends SolucionPOA{
     @Override
     public fichero[] listarArchivosDuplicados(String rutaDirectorio) {
         
-        File f=new File(rutaDirectorio);
-        fichero[] ficheros;
-        ArrayList<fichero> ficherosTmp=new ArrayList<fichero>();
+        System.out.println(" Usuario solicita listar archivos duplicados");
         
-        ficheros = null;
+        File f=new File(rutaDirectorio);
+        ArrayList<fichero> ficherosTmp=new ArrayList<fichero>();
+        ArrayList<fichero> ficherosDuplicados=new ArrayList<fichero>();
+        
         if(f.exists()){//Si el directorio existe
-            File[] files = f.listFiles();
-            if(files.length==0){
-                fichero fichero=new fichero("$",false);
-                ficheros[0]=fichero;
-            }
-            for (int i = 0; i < files.length; i++) {
-                fichero fTmp = listarArchivosDuplicados(files[i],files);
-                if(fTmp!=null){
-                    ficherosTmp.add(fTmp);
-                }
-            }
+            ficherosTmp=listarArchivosDuplicados(f,ficherosTmp);
         }else{ //no existe
             return null;
         }
         
         for (int i = 0; i < ficherosTmp.size(); i++) {
-            ficheros[i]=ficherosTmp.get(i);
+            int cont=0;
+            for (int j = 0; j < ficherosDuplicados.size(); j++) {
+                if(ficherosDuplicados.get(j).equals(ficherosTmp.get(j))){
+                   cont ++; 
+                }
+            }
+            if(cont==0){
+                if(validarNombre(ficherosTmp.get(i),ficherosTmp)){
+                        ficherosDuplicados.add(ficherosTmp.get(i));
+                }
+            }
         }
+        
+        fichero[] ficheros = new fichero[ficherosDuplicados.size()];
+        
+        for (int j = 0; j < ficherosDuplicados.size(); j++) {
+            ficheros[j]=ficherosDuplicados.get(j);
+        }
+        
         return ficheros;
     }
     
-    private fichero listarArchivosDuplicados(File file,File[] files){
-        fichero fichero = null;
+    private ArrayList<fichero> listarArchivosDuplicados(File file,ArrayList<fichero> files){
+        
+        fichero fichero;
         if(file.isFile()){
-            if(validarNombre(files,file)){
+            //if(validarNombre(files,file)){
                 fichero=new fichero(file.getName(),false);
-            }
+                files.add(fichero);
+            //}
             
         }else{
             File[] listFiles = file.listFiles();
             for (int i = 0; i < listFiles.length; i++) {
-                fichero=listarArchivosDuplicados(listFiles[i],listFiles);
+                files=listarArchivosDuplicados(listFiles[i],files);
             }
         }
         
-        return fichero;
+        return files;
     }
     
-    private boolean validarNombre(File[] files, File file){
+    private boolean validarNombre(fichero file,ArrayList<fichero> files){
         int cont=0;
         boolean flag=false;
-        for (int i = 0; i < files.length; i++) {
-            if(file.getName().equals(files[i].getName())){
+        for (int i = 0; i < files.size(); i++) {
+            if(file.nombre.equals(files.get(i).nombre)){
                 cont ++;
             }
         }
